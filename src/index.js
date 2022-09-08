@@ -9,37 +9,33 @@ const countryInfo = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
 
 const search = () => {
+    const value = input.value.trim();
     countryList.innerHTML = '';
     countryInfo.innerHTML = '';
-
-    const countries = [];
-    const value = input.value.trim();
-
     if (value) {
         fetchCountries(value)
             .then(data => {
-                countries.push(...data);
-                if (countries.length > 10) return Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
-                if (countries.length === 1) {
+                if (data.length > 10) return Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+                if (data.length === 1) {
                     countryInfo.innerHTML = `
                         <div style="display: flex; align-items: center;">
-                            <img src="${countries[0].flags.svg}"/>
-                            <h1>${countries[0].name}</h1>
+                            <img src="${data[0].flags.svg}"/>
+                            <h1>${data[0].name}</h1>
                         </div>
                         <ul>
                             <li>
-                                <span>Capital:</span><p>${countries[0].capital}</p>
+                                <span>Capital:</span><p>${data[0].capital}</p>
                             </li>
                             <li>
-                                <span>Population:</span><p>${countries[0].population}</p>
+                                <span>Population:</span><p>${data[0].population}</p>
                             </li>
                             <li>
-                                <span>Languages:</span><p>${countries[0].languages.map(lng => lng.name).join(', ')}</p>
+                                <span>Languages:</span><p>${data[0].languages.map(lng => lng.name).join(', ')}</p>
                             </li>
                         </ul>
                     `;
                 } else {
-                    for (const country of countries) {
+                    for (const country of data) {
                         countryList.innerHTML += `
                             <li>
                                 <img src="${country.flags.svg}"/>
@@ -51,6 +47,6 @@ const search = () => {
             })
             .catch(() => Notiflix.Notify.failure('Oops, there is no country with that name'));
     };
-}
+};
 
 input.addEventListener('input', debounce(search, DEBOUNCE_DELAY));
