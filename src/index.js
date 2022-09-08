@@ -8,7 +8,7 @@ const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
 
-input.addEventListener('input', debounce(() => {
+const search = () => {
     countryList.innerHTML = '';
     countryInfo.innerHTML = '';
 
@@ -23,7 +23,7 @@ input.addEventListener('input', debounce(() => {
                 if (countries.length === 1) {
                     countryInfo.innerHTML = `
                         <div style="display: flex; align-items: center;">
-                            <img src="${countries[0].flag}"/>
+                            <img src="${countries[0].flags.svg}"/>
                             <h1>${countries[0].name}</h1>
                         </div>
                         <ul>
@@ -42,7 +42,7 @@ input.addEventListener('input', debounce(() => {
                     for (const country of countries) {
                         countryList.innerHTML += `
                             <li>
-                                <img src="${country.flag}"/>
+                                <img src="${country.flags.svg}"/>
                                 <p>${country.name}</p>
                             </li>
                         `;
@@ -51,4 +51,6 @@ input.addEventListener('input', debounce(() => {
             })
             .catch(() => Notiflix.Notify.failure('Oops, there is no country with that name'));
     };
-}, DEBOUNCE_DELAY));
+}
+
+input.addEventListener('input', debounce(search, DEBOUNCE_DELAY));
